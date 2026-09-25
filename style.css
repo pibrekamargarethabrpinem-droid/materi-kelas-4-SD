@@ -1,0 +1,246 @@
+/* Reset & IFP Target Variables */
+:root {
+    --primary-color: #4A90E2;
+    --success-color: #2ECC71;
+    --warning-color: #F39C12;
+    --bg-color: #EBF5FB;
+    --card-bg: #FFFFFF;
+    --text-color: #2C3E50;
+    --min-touch-size: 70px; /* Sangat baik untuk IFP/Touchscreen */
+}
+
+* {
+    box-sizing: border-box;
+    user-select: none; /* Mencegah seleksi teks tidak sengaja pada papan sentuh */
+    -webkit-user-select: none;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Comic Sans MS', 'Chalkboard SE', 'Segoe UI', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+/* Base IFP Screen Aspect Ratio Container */
+.ifp-container {
+    width: 95vw;
+    height: 90vh;
+    max-width: 1600px;
+    max-height: 900px;
+    background: var(--card-bg);
+    border-radius: 24px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 30px;
+}
+
+/* Header */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 4px solid var(--bg-color);
+    padding-bottom: 10px;
+}
+
+.app-header h1 {
+    font-size: 2.2rem;
+    margin: 0;
+    color: var(--primary-color);
+}
+
+/* Buttons for Touch Screen */
+.touch-btn {
+    min-height: var(--min-touch-size);
+    min-width: var(--min-touch-size);
+    font-size: 1.5rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    background-color: #E0E0E0;
+    color: var(--text-color);
+    transition: transform 0.1s, background-color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 24px;
+}
+
+.touch-btn:active {
+    transform: scale(0.95);
+}
+
+.touch-btn.primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.icon-btn {
+    font-size: 2rem;
+    border-radius: 50%;
+    margin-left: 10px;
+}
+
+/* Screen Management */
+.content-area {
+    flex: 1;
+    position: relative;
+    margin-top: 20px;
+}
+
+.screen {
+    display: none;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* Halaman Utama - Grid Kartu */
+.story-grid {
+    display: flex;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.card-btn {
+    width: 240px;
+    height: 240px;
+    background-color: #FFF9E6;
+    border: 4px solid var(--warning-color);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.card-btn:active {
+    transform: scale(0.95);
+}
+
+.card-icon {
+    font-size: 5rem;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+/* Reader Card */
+.story-card {
+    display: flex;
+    width: 90%;
+    height: 65%;
+    background-color: #F9F9F9;
+    border: 3px solid #E0E0E0;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.illustration-box {
+    width: 40%;
+    background-color: #E8F8F5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8rem;
+}
+
+.text-box {
+    width: 60%;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.large-text {
+    font-size: 2.8rem;
+    line-height: 1.4;
+    font-weight: 600;
+}
+
+.read-btn {
+    align-self: flex-start;
+    background-color: #A569BD;
+    color: white;
+}
+
+.nav-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    margin-top: 20px;
+}
+
+.page-num {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+/* Quiz Section */
+.quiz-container {
+    width: 80%;
+    text-align: center;
+}
+
+.quiz-title {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.option-btn {
+    font-size: 2rem;
+    padding: 25px;
+    background-color: #EAECEE;
+    border: 3px solid #BDC3C7;
+    border-radius: 16px;
+    cursor: pointer;
+}
+
+.feedback-box {
+    margin-top: 30px;
+    font-size: 2.2rem;
+    font-weight: bold;
+    padding: 15px;
+    border-radius: 12px;
+}
+
+.feedback-box.correct {
+    background-color: #D4EFDF;
+    color: var(--success-color);
+}
+
+.feedback-box.wrong {
+    background-color: #FADBD8;
+    color: #E74C3C;
+}
+
+.hidden {
+    display: none;
+}

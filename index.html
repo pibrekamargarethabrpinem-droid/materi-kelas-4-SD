@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPI Membaca Cerita Sederhana - Fase B</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="ifp-container">
+        <!-- Header / Navigation -->
+        <header class="app-header">
+            <h1 id="app-title">Mari Membaca Cerita! 📚</h1>
+            <div class="header-controls">
+                <button id="btn-sound" class="touch-btn icon-btn" title="Suara On/Off">🔊</button>
+                <button id="btn-home" class="touch-btn icon-btn" title="Halaman Utama">🏠</button>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="content-area">
+            
+            <!-- Halaman 1: Menu Utama -->
+            <section id="screen-home" class="screen active">
+                <h2>Pilih Cerita Hari Ini</h2>
+                <div class="story-grid">
+                    <button class="card-btn" onclick="startStory(1)">
+                        <span class="card-icon">🐱</span>
+                        <span class="card-title">Kucing Kiki</span>
+                    </button>
+                    <button class="card-btn" onclick="startStory(2)">
+                        <span class="card-icon">🐰</span>
+                        <span class="card-title">Kelinci Melompat</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Halaman 2: Baca Cerita (Per Kalimat/Halaman) -->
+            <section id="screen-reader" class="screen">
+                <div class="story-card">
+                    <div class="illustration-box" id="story-image">🐱</div>
+                    <div class="text-box">
+                        <p id="story-text" class="large-text">Kiki adalah seekor kucing kecil.</p>
+                        <button class="touch-btn read-btn" onclick="readCurrentText()">📢 Dengar Suara</button>
+                    </div>
+                </div>
+
+                <div class="nav-controls">
+                    <button id="btn-prev" class="touch-btn nav-btn" onclick="prevPage()">⬅️ Kembali</button>
+                    <span id="page-indicator" class="page-num">1 / 3</span>
+                    <button id="btn-next" class="touch-btn nav-btn primary" onclick="nextPage()">Lanjut ➡️</button>
+                </div>
+            </section>
+
+            <!-- Halaman 3: Kuis Interaktif -->
+            <section id="screen-quiz" class="screen">
+                <div class="quiz-container">
+                    <h2 id="quiz-question" class="quiz-title">Apa warna Kiki?</h2>
+                    <div id="quiz-options" class="options-grid">
+                        <!-- Tombol pilihan dipasang via JS -->
+                    </div>
+                    <div id="quiz-feedback" class="feedback-box hidden"></div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
