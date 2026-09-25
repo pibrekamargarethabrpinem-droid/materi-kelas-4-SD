@@ -3,65 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MPI Membaca Cerita Sederhana - Fase B</title>
+    <title>MPI - Belajar Mengurutkan Berat Benda (Fase B)</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="ifp-container">
-        <!-- Header / Navigation -->
+        <!-- Header / Navigasi -->
         <header class="app-header">
-            <h1 id="app-title">Mari Membaca Cerita! 📚</h1>
+            <h1 id="app-title">Mengurutkan Berat Benda ⚖️</h1>
             <div class="header-controls">
                 <button id="btn-sound" class="touch-btn icon-btn" title="Suara On/Off">🔊</button>
-                <button id="btn-home" class="touch-btn icon-btn" title="Halaman Utama">🏠</button>
+                <button id="btn-home" class="touch-btn icon-btn" title="Kembali ke Menu">🏠</button>
             </div>
         </header>
 
-        <!-- Main Content Area -->
+        <!-- Area Konten Utama -->
         <main class="content-area">
             
-            <!-- Halaman 1: Menu Utama -->
+            <!-- Layar 1: Menu Utama -->
             <section id="screen-home" class="screen active">
-                <h2>Pilih Cerita Hari Ini</h2>
-                <div class="story-grid">
-                    <button class="card-btn" onclick="startStory(1)">
-                        <span class="card-icon">🐱</span>
-                        <span class="card-title">Kucing Kiki</span>
+                <h2>Pilih Mode Belajar</h2>
+                <div class="menu-grid">
+                    <button class="menu-card" onclick="startActivity('heavy-to-light')">
+                        <span class="card-icon">🐘 ➡️ 🪶</span>
+                        <span class="card-title">Terberat ke Teringan</span>
                     </button>
-                    <button class="card-btn" onclick="startStory(2)">
-                        <span class="card-icon">🐰</span>
-                        <span class="card-title">Kelinci Melompat</span>
+                    <button class="menu-card" onclick="startActivity('light-to-heavy')">
+                        <span class="card-icon">🪶 ➡️ 🐘</span>
+                        <span class="card-title">Teringan ke Terberat</span>
                     </button>
                 </div>
             </section>
 
-            <!-- Halaman 2: Baca Cerita (Per Kalimat/Halaman) -->
-            <section id="screen-reader" class="screen">
-                <div class="story-card">
-                    <div class="illustration-box" id="story-image">🐱</div>
-                    <div class="text-box">
-                        <p id="story-text" class="large-text">Kiki adalah seekor kucing kecil.</p>
-                        <button class="touch-btn read-btn" onclick="readCurrentText()">📢 Dengar Suara</button>
+            <!-- Layar 2: Latihan Interaktif Mengurutkan -->
+            <section id="screen-activity" class="screen">
+                <div class="instruction-box">
+                    <span id="instruction-text" class="instruction-title">Urutkan dari yang TERBERAT!</span>
+                    <button class="touch-btn audio-btn" onclick="readInstruction()">📢 Dengar</button>
+                </div>
+
+                <!-- Benda yang perlu diurutkan -->
+                <div class="items-source-container">
+                    <p class="section-label">Sentuh/Pilih Benda:</p>
+                    <div id="source-pool" class="items-pool">
+                        <!-- Kartu Benda dibuat dinamis via JavaScript -->
                     </div>
                 </div>
 
-                <div class="nav-controls">
-                    <button id="btn-prev" class="touch-btn nav-btn" onclick="prevPage()">⬅️ Kembali</button>
-                    <span id="page-indicator" class="page-num">1 / 3</span>
-                    <button id="btn-next" class="touch-btn nav-btn primary" onclick="nextPage()">Lanjut ➡️</button>
-                </div>
-            </section>
-
-            <!-- Halaman 3: Kuis Interaktif -->
-            <section id="screen-quiz" class="screen">
-                <div class="quiz-container">
-                    <h2 id="quiz-question" class="quiz-title">Apa warna Kiki?</h2>
-                    <div id="quiz-options" class="options-grid">
-                        <!-- Tombol pilihan dipasang via JS -->
+                <!-- Slot Urutan (Drop Zone) -->
+                <div class="slots-container">
+                    <p class="section-label">Kotak Urutan:</p>
+                    <div class="slots-grid">
+                        <div class="slot-box" data-slot="0" onclick="removeFromSlot(0)">
+                            <span class="slot-number">1</span>
+                            <div class="slot-content"></div>
+                        </div>
+                        <div class="slot-box" data-slot="1" onclick="removeFromSlot(1)">
+                            <span class="slot-number">2</span>
+                            <div class="slot-content"></div>
+                        </div>
+                        <div class="slot-box" data-slot="2" onclick="removeFromSlot(2)">
+                            <span class="slot-number">3</span>
+                            <div class="slot-content"></div>
+                        </div>
                     </div>
-                    <div id="quiz-feedback" class="feedback-box hidden"></div>
                 </div>
+
+                <!-- Tombol Aksi & Umpan Balik -->
+                <div class="action-controls">
+                    <button class="touch-btn primary" onclick="checkOrder()">✅ Periksa Jawaban</button>
+                    <button class="touch-btn warning" onclick="resetCurrentLevel()">🔄 Ulangi</button>
+                </div>
+
+                <div id="feedback-message" class="feedback-box hidden"></div>
             </section>
 
         </main>

@@ -1,17 +1,17 @@
-/* Reset & IFP Target Variables */
 :root {
-    --primary-color: #4A90E2;
+    --primary-color: #3498DB;
     --success-color: #2ECC71;
-    --warning-color: #F39C12;
+    --warning-color: #E67E22;
+    --danger-color: #E74C3C;
     --bg-color: #EBF5FB;
     --card-bg: #FFFFFF;
     --text-color: #2C3E50;
-    --min-touch-size: 70px; /* Sangat baik untuk IFP/Touchscreen */
+    --min-touch-size: 65px;
 }
 
 * {
     box-sizing: border-box;
-    user-select: none; /* Mencegah seleksi teks tidak sengaja pada papan sentuh */
+    user-select: none;
     -webkit-user-select: none;
 }
 
@@ -28,7 +28,6 @@ body {
     overflow: hidden;
 }
 
-/* Base IFP Screen Aspect Ratio Container */
 .ifp-container {
     width: 95vw;
     height: 90vh;
@@ -42,7 +41,6 @@ body {
     padding: 20px 30px;
 }
 
-/* Header */
 .app-header {
     display: flex;
     justify-content: space-between;
@@ -57,11 +55,10 @@ body {
     color: var(--primary-color);
 }
 
-/* Buttons for Touch Screen */
 .touch-btn {
     min-height: var(--min-touch-size);
     min-width: var(--min-touch-size);
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: bold;
     border: none;
     border-radius: 16px;
@@ -72,7 +69,7 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 10px 24px;
+    padding: 10px 20px;
 }
 
 .touch-btn:active {
@@ -80,7 +77,12 @@ body {
 }
 
 .touch-btn.primary {
-    background-color: var(--primary-color);
+    background-color: var(--success-color);
+    color: white;
+}
+
+.touch-btn.warning {
+    background-color: var(--warning-color);
     color: white;
 }
 
@@ -90,11 +92,10 @@ body {
     margin-left: 10px;
 }
 
-/* Screen Management */
 .content-area {
     flex: 1;
     position: relative;
-    margin-top: 20px;
+    margin-top: 15px;
 }
 
 .screen {
@@ -102,132 +103,143 @@ body {
     height: 100%;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
 }
 
 .screen.active {
     display: flex;
 }
 
-/* Halaman Utama - Grid Kartu */
-.story-grid {
+/* Menu Utama */
+.menu-grid {
     display: flex;
-    gap: 30px;
-    margin-top: 30px;
+    gap: 40px;
+    margin-top: 50px;
 }
 
-.card-btn {
-    width: 240px;
-    height: 240px;
-    background-color: #FFF9E6;
-    border: 4px solid var(--warning-color);
-    border-radius: 20px;
+.menu-card {
+    width: 280px;
+    height: 280px;
+    background-color: #F9EBEA;
+    border: 4px solid var(--primary-color);
+    border-radius: 24px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.card-btn:active {
-    transform: scale(0.95);
 }
 
 .card-icon {
-    font-size: 5rem;
+    font-size: 4rem;
 }
 
 .card-title {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: bold;
-    margin-top: 15px;
-}
-
-/* Reader Card */
-.story-card {
-    display: flex;
-    width: 90%;
-    height: 65%;
-    background-color: #F9F9F9;
-    border: 3px solid #E0E0E0;
-    border-radius: 20px;
-    overflow: hidden;
-}
-
-.illustration-box {
-    width: 40%;
-    background-color: #E8F8F5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 8rem;
-}
-
-.text-box {
-    width: 60%;
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.large-text {
-    font-size: 2.8rem;
-    line-height: 1.4;
-    font-weight: 600;
-}
-
-.read-btn {
-    align-self: flex-start;
-    background-color: #A569BD;
-    color: white;
-}
-
-.nav-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 90%;
     margin-top: 20px;
-}
-
-.page-num {
-    font-size: 1.8rem;
-    font-weight: bold;
-}
-
-/* Quiz Section */
-.quiz-container {
-    width: 80%;
     text-align: center;
 }
 
-.quiz-title {
-    font-size: 2.5rem;
-    margin-bottom: 30px;
-}
-
-.options-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+/* Instruksi */
+.instruction-box {
+    display: flex;
+    align-items: center;
     gap: 20px;
+    background-color: #E8F8F5;
+    padding: 12px 25px;
+    border-radius: 16px;
+    border: 2px solid var(--primary-color);
 }
 
-.option-btn {
+.instruction-title {
     font-size: 2rem;
-    padding: 25px;
-    background-color: #EAECEE;
-    border: 3px solid #BDC3C7;
-    border-radius: 16px;
+    font-weight: bold;
+}
+
+.audio-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.section-label {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+/* Pool Benda */
+.items-pool {
+    display: flex;
+    gap: 25px;
+    min-height: 140px;
+}
+
+.item-card {
+    width: 130px;
+    height: 130px;
+    background-color: #FEF9E7;
+    border: 3px solid #F1C40F;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+.item-emoji {
+    font-size: 3.5rem;
+}
+
+.item-name {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.item-card.disabled {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+/* Slot Zona Urutan */
+.slots-grid {
+    display: flex;
+    gap: 30px;
+}
+
+.slot-box {
+    width: 140px;
+    height: 140px;
+    border: 4px dashed var(--primary-color);
+    border-radius: 20px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #FAFAFA;
     cursor: pointer;
 }
 
-.feedback-box {
-    margin-top: 30px;
-    font-size: 2.2rem;
+.slot-number {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    font-size: 1.2rem;
     font-weight: bold;
-    padding: 15px;
+    color: #BDC3C7;
+}
+
+.action-controls {
+    display: flex;
+    gap: 20px;
+}
+
+.feedback-box {
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 10px 30px;
     border-radius: 12px;
 }
 
@@ -238,7 +250,7 @@ body {
 
 .feedback-box.wrong {
     background-color: #FADBD8;
-    color: #E74C3C;
+    color: var(--danger-color);
 }
 
 .hidden {

@@ -1,144 +1,159 @@
-// Data Cerita & Kuis (Fase B Pendidikan Khusus)
-const stories = {
-    1: {
-        title: "Kucing Kiki",
-        pages: [
-            { text: "Ini Kiki. Kiki adalah kucing yang lucu.", icon: "🐱" },
-            { text: "Kiki punya bulu berwarna oranye.", icon: "🐈" },
-            { text: "Kiki sangat suka makan ikan segar.", icon: "🐟" }
-        ],
-        quiz: {
-            question: "Apa makanan kesukaan Kiki?",
-            options: ["Roti", "Ikan", "Ayam"],
-            answer: 1 // Indeks jawaban benar
-        }
-    },
-    2: {
-        title: "Kelinci Melompat",
-        pages: [
-            { text: "Loli adalah kelinci yang ramah.", icon: "🐰" },
-            { text: "Loli suka melompat di taman bunga.", icon: "🌸" },
-            { text: "Makanan favorit Loli adalah wortel manis.", icon: "🥕" }
-        ],
-        quiz: {
-            question: "Di mana Loli suka melompat?",
-            options: ["Di taman bunga", "Di dalam kamar", "Di atas meja"],
-            answer: 0
-        }
-    }
-};
+// Bank Data Benda dengan nilai bobot relatif
+const itemsData = [
+    { id: 'gajah', name: 'Gajah', icon: '🐘', weight: 100 },
+    { id: 'kucing', name: 'Kucing', icon: '🐱', weight: 20 },
+    { id: 'semut', name: 'Semut', icon: '🐜', weight: 1 },
+    { id: 'mobil', name: 'Mobil', icon: '🚗', weight: 80 },
+    { id: 'sepeda', name: 'Sepeda', icon: '🚲', weight: 15 },
+    { id: 'balon', name: 'Balon', icon: '🎈', weight: 2 }
+];
 
-let currentStoryId = null;
-let currentPageIndex = 0;
+let mode = 'heavy-to-light'; // 'heavy-to-light' atau 'light-to-heavy'
+let currentItems = [];
+let placedItems = [null, null, null];
 let soundEnabled = true;
 
-// Fitur Text to Speech bawaan IFP / Browser
 function speakText(text) {
     if (!soundEnabled) return;
-    window.speechSynthesis.cancel(); // Hentikan audio sebelumnya
+    window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = 'id-ID';
-    utterance.rate = 0.85; // Kecepatan agak lambat cocok untuk PDBK Fase B
-    utterance.pitch = 1.1;
+    utterance.rate = 0.85;
     window.speechSynthesis.speak(utterance);
 }
 
-// Navigasi Layar
 function showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(screenId).classList.add('active');
 }
 
-// Memulai Cerita
-function startStory(id) {
-    currentStoryId = id;
-    currentPageIndex = 0;
-    showScreen('screen-reader');
-    updateStoryPage();
+function startActivity(selectedMode) {
+    mode = selectedMode;
+    showScreen('screen-activity');
+    setupLevel();
 }
 
-// Update Konten Halaman
-function updateStoryPage() {
-    const story = stories[currentStoryId];
-    const page = story.pages[currentPageIndex];
-
-    document.getElementById('story-text').textContent = page.text;
-    document.getElementById('story-image').textContent = page.icon;
-    document.getElementById('page-indicator').textContent = `${currentPageIndex + 1} / ${story.pages.length}`;
-
-    // Otomatis bacakan teks saat halaman berganti
-    speakText(page.text);
-
-    // Update Tombol Navigasi
-    document.getElementById('btn-prev').style.visibility = currentPageIndex === 0 ? 'hidden' : 'visible';
-}
-
-function readCurrentText() {
-    const text = document.getElementById('story-text').textContent;
-    speakText(text);
-}
-
-function nextPage() {
-    const story = stories[currentStoryId];
-    if (currentPageIndex < story.pages.length - 1) {
-        currentPageIndex++;
-        updateStoryPage();
-    } else {
-        // Jika cerita selesai, masuk ke kuis
-        loadQuiz();
-    }
-}
-
-function prevPage() {
-    if (currentPageIndex > 0) {
-        currentPageIndex--;
-        updateStoryPage();
-    }
-}
-
-// Modul Kuis Interaktif
-function loadQuiz() {
-    showScreen('screen-quiz');
-    const quiz = stories[currentStoryId].quiz;
+function setupLevel() {
+    placedItems = [null, null, null];
+    document.getElementById('feedback-message').classList.add('hidden');
     
-    document.getElementById('quiz-question').textContent = quiz.question;
-    speakText("Pertanyaan: " + quiz.question);
+    // Pilih 3 benda secara acak
+    const shuffled = [...itemsData].sort(() => 0.5 - Math.random());
+    currentItems = shuffled.slice(0, 3);
 
-    const optionsContainer = document.getElementById('quiz-options');
-    optionsContainer.innerHTML = '';
+    // Atur Teks Instruksi
+    const instructionText = mode === 'heavy-to-light' 
+        ? "Urutkan dari yang TERBERAT ke TERINGAN!" 
+        : "Urutkan dari yang TERINGAN ke TERBERAT!";
     
-    const feedbackBox = document.getElementById('quiz-feedback');
-    feedbackBox.classList.add('hidden');
+    document.getElementById('instruction-text').textContent = instructionText;
+    speakText(instructionText);
 
-    quiz.options.forEach((opt, index) => {
-        const btn = document.createElement('button');
-        btn.className = 'touch-btn option-btn';
-        btn.textContent = opt;
-        btn.onclick = () => checkAnswer(index, quiz.answer);
-        optionsContainer.appendChild(btn);
+    renderSourcePool();
+    renderSlots();
+}
+
+function renderSourcePool() {
+    const poolContainer = document.getElementById('source-pool');
+    poolContainer.innerHTML = '';
+
+    currentItems.forEach(item => {
+        const isPlaced = placedItems.some(p => p && p.id === item.id);
+        const card = document.createElement('div');
+        card.className = `item-card ${isPlaced ? 'disabled' : ''}`;
+        card.innerHTML = `
+            <span class="item-emoji">${item.icon}</span>
+            <span class="item-name">${item.name}</span>
+        `;
+        card.onclick = () => selectItem(item);
+        poolContainer.appendChild(card);
     });
 }
 
-function checkAnswer(selectedIndex, correctIndex) {
-    const feedbackBox = document.getElementById('quiz-feedback');
-    feedbackBox.classList.remove('hidden');
-
-    if (selectedIndex === correctIndex) {
-        feedbackBox.textContent = "🎉 Hebat! Jawabanmu Benar!";
-        feedbackBox.className = "feedback-box correct";
-        speakText("Hebat! Jawabanmu Benar!");
-        
-        setTimeout(() => {
-            showScreen('screen-home');
-        }, 3000);
-    } else {
-        feedbackBox.textContent = "❌ Coba Lagi Ya!";
-        feedbackBox.className = "feedback-box wrong";
-        speakText("Coba Lagi Ya!");
+function selectItem(item) {
+    // Masukkan ke slot kosong pertama
+    const emptyIndex = placedItems.findIndex(p => p === null);
+    if (emptyIndex !== -1) {
+        placedItems[emptyIndex] = item;
+        speakText(item.name);
+        renderSourcePool();
+        renderSlots();
     }
 }
 
-// Global Event Listeners
+function removeFromSlot(index) {
+    if (placedItems[index] !== null) {
+        placedItems[index] = null;
+        renderSourcePool();
+        renderSlots();
+    }
+}
+
+function renderSlots() {
+    const slots = document.querySelectorAll('.slot-box');
+    slots.forEach((slot, idx) => {
+        const contentArea = slot.querySelector('.slot-content');
+        const item = placedItems[idx];
+        
+        if (item) {
+            contentArea.innerHTML = `
+                <div class="item-card" style="box-shadow:none; border:none; background:transparent;">
+                    <span class="item-emoji">${item.icon}</span>
+                    <span class="item-name">${item.name}</span>
+                </div>
+            `;
+        } else {
+            contentArea.innerHTML = '';
+        }
+    });
+}
+
+function readInstruction() {
+    const text = document.getElementById('instruction-text').textContent;
+    speakText(text);
+}
+
+function checkOrder() {
+    // Pastikan semua slot telah terisi
+    if (placedItems.includes(null)) {
+        speakText("Isi semua kotak terlebih dahulu!");
+        showFeedback("Isi semua 3 kotak urutan!", false);
+        return;
+    }
+
+    let isCorrect = true;
+    if (mode === 'heavy-to-light') {
+        isCorrect = (placedItems[0].weight >= placedItems[1].weight) && 
+                    (placedItems[1].weight >= placedItems[2].weight);
+    } else {
+        isCorrect = (placedItems[0].weight <= placedItems[1].weight) && 
+                    (placedItems[1].weight <= placedItems[2].weight);
+    }
+
+    if (isCorrect) {
+        showFeedback("🎉 Luar Biasa! Urutanmu Benar!", true);
+        speakText("Luar Biasa! Urutanmu Benar!");
+    } else {
+        showFeedback("❌ Masih Kurang Tepat, Coba Lagi Ya!", false);
+        speakText("Masih Kurang Tepat, Coba Lagi Ya!");
+    }
+}
+
+function showFeedback(msg, isSuccess) {
+    const feedbackBox = document.getElementById('feedback-message');
+    feedbackBox.textContent = msg;
+    feedbackBox.className = `feedback-box ${isSuccess ? 'correct' : 'wrong'}`;
+    feedbackBox.classList.remove('hidden');
+}
+
+function resetCurrentLevel() {
+    placedItems = [null, null, null];
+    document.getElementById('feedback-message').classList.add('hidden');
+    renderSourcePool();
+    renderSlots();
+}
+
+// Global Navigasi
 document.getElementById('btn-home').onclick = () => {
     window.speechSynthesis.cancel();
     showScreen('screen-home');
@@ -146,7 +161,6 @@ document.getElementById('btn-home').onclick = () => {
 
 document.getElementById('btn-sound').onclick = () => {
     soundEnabled = !soundEnabled;
-    const soundBtn = document.getElementById('btn-sound');
-    soundBtn.textContent = soundEnabled ? '🔊' : '🔇';
+    document.getElementById('btn-sound').textContent = soundEnabled ? '🔊' : '🔇';
     if (!soundEnabled) window.speechSynthesis.cancel();
 };
